@@ -1,0 +1,144 @@
+/* Styles pour les pages de connexion et d'inscription */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff;
+    color: #333333;
+  }
+  
+  .auth-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 2rem;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #ffffff;
+    text-align: center;
+  }
+  
+  .auth-container h1 {
+    font-size: 2rem;
+    color: #333333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .auth-container form input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333333;
+    background-color: #f9f9f9;
+  }
+  
+  .auth-container form input:focus {
+    border-color: #bfa67a; /* Couleur dorée */
+    outline: none;
+  }
+  
+  .auth-container form button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #333333;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .auth-container form button:hover {
+    background-color: #bfa67a; /* Couleur dorée */
+  }
+  
+  .auth-link {
+    margin-top: 1rem;
+    color: #666666;
+  }
+  
+  .auth-link a {
+    color: #bfa67a; /* Couleur dorée */
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .auth-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Styles généraux */
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color: #333333;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Styles pour le header */
+.site-header {
+    display: flex;
+    justify-content: space-between; /* Aligne le titre à gauche et la nav à droite */
+    align-items: center;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .site-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333333;
+    margin: 0;
+  }
+  
+  .nav-bar {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .nav-link {
+    color: #333333;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    transition: color 0.3s, background-color 0.3s;
+  }
+  
+  .nav-link:hover {
+    background-color: #bfa67a; /* Couleur dorée pour le hover */
+    color: #ffffff;
+  }
+  
+  /* Footer Styles */
+  .site-footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #f1f1f1;
+    color: #666666;
+    font-size: 0.9rem;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .site-footer p {
+    margin: 0;
+  }
+  
+  .site-footer a {
+    color: #bfa67a;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .site-footer a:hover {
+    color: #333333;
+    text-decoration: underline;
+  }
+  
