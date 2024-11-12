@@ -26,17 +26,26 @@ const validate = (state: any) => {
   return errors
 }
 
-const providers = [{
-  label: 'Continue with GitHub',
-  icon: 'i-simple-icons-github',
-  color: 'white' as const,
-  click: () => {
-    console.log('Redirect to GitHub')
-  }
-}]
+// const providers = [{
+//   label: 'Continue with GitHub',
+//   icon: 'i-simple-icons-github',
+//   color: 'white' as const,
+//   click: () => {
+//     console.log('Redirect to GitHub')
+//   }
+// }]
 
-function onSubmit(data: any) {
-  console.log('Submitted', data)
+async function onSubmit(data: any) {
+  const res = await $fetch('/api/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: data.email,
+      password: data.password
+    })
+  })
+  if (res) {
+    navigateTo('/')
+  }
 }
 </script>
 
@@ -47,7 +56,6 @@ function onSubmit(data: any) {
     <UAuthForm
       :fields="fields"
       :validate="validate"
-      :providers="providers"
       title="Welcome back"
       align="top"
       icon="i-heroicons-lock-closed"
