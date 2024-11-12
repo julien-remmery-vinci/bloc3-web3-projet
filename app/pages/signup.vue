@@ -40,8 +40,18 @@ const providers = [{
   }
 }]
 
-function onSubmit(data: any) {
-  console.log('Submitted', data)
+async function onSubmit(data: any) {
+  const res = await $fetch('/api/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({
+      name: data.name,
+      email: data.email,
+      password: data.password
+    })
+  })
+  if (res) {
+    navigateTo('/')
+  }
 }
 </script>
 

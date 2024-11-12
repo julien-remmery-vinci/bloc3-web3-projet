@@ -12,11 +12,6 @@ const fields = [{
   type: 'email',
   label: 'Email',
   placeholder: 'Enter your email'
-}, {
-  name: 'password',
-  label: 'Password',
-  type: 'password',
-  placeholder: 'Enter your password'
 }]
 
 const validate = (state: any) => {
@@ -26,17 +21,72 @@ const validate = (state: any) => {
   return errors
 }
 
-const providers = [{
-  label: 'Continue with GitHub',
-  icon: 'i-simple-icons-github',
-  color: 'white' as const,
-  click: () => {
-    console.log('Redirect to GitHub')
-  }
-}]
+const supabase = useSupabaseClient()
 
-function onSubmit(data: any) {
-  console.log('Submitted', data)
+const signInWithGithub = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+      redirectTo: 'http://localhost:3000/confirm',
+    },
+    })
+
+    if(data.url) {
+      navigateTo(data.url)
+    }
+}
+
+const signInWithGoogle = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+      redirectTo: 'http://localhost:3000/confirm',
+    },
+    })
+
+    if(data.url) {
+      navigateTo(data.url)
+    }
+}
+
+const signInWithGMicrosoft = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'azure',
+      options: {
+        scopes: 'email',
+        redirectTo: 'http://localhost:3000/confirm',
+      },
+    })
+
+    if(data.url) {
+      navigateTo(data.url)
+    }
+}
+
+
+const providers = [
+  {
+    label: 'Continue with GitHub',
+    icon: 'i-simple-icons-github',
+    color: 'white' as const,
+    click: signInWithGithub
+  },
+  {
+    label: 'Continue with Google',
+    icon: 'i-simple-icons-google',
+    color: 'white' as const,
+    click: signInWithGoogle
+  },
+  {
+    label: 'Continue with Microsoft',
+    icon: 'i-simple-icons-microsoft',
+    color: 'white' as const,
+    click: signInWithGMicrosoft
+  }
+]
+
+async function onSubmit(data: any) {
+  
 }
 </script>
 
@@ -55,13 +105,6 @@ function onSubmit(data: any) {
       :submit-button="{ trailingIcon: 'i-heroicons-arrow-right-20-solid' }"
       @submit="onSubmit"
     >
-      <template #description>
-        Don't have an account? <NuxtLink
-          to="/signup"
-          class="text-primary font-medium"
-        >Sign up</NuxtLink>.
-      </template>
-
       <template #password-hint>
         <NuxtLink
           to="/"
