@@ -1,45 +1,48 @@
 <script setup lang="ts">
-import type { NavItem } from '@nuxt/content'
-
-const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
+const supabase = useSupabaseClient()
+const { data } = await supabase.auth.getSession()
 
 const links = [{
   label: 'Stats',
   to: '/stats'
+}, {
+  label: 'Calendar',
+  to: '/calendar'
 }]
+
+async function signOut() {
+  const { error } = await supabase.auth.signOut()
+  console.log(error)
+  if (!error) {
+    navigateTo('/')
+  }
+}
 </script>
 
 <template>
   <UHeader :links="links">
     <template #logo>
-      Nuxt UI Pro <UBadge
-        label="SaaS"
-        variant="subtle"
-        class="mb-0.5"
-      />
+      Budget Planner
     </template>
 
     <template #right>
       <UButton
+        v-if="!data.session"
         label="Sign in"
         color="gray"
         to="/login"
       />
-      <!-- <UButton
-        label="Sign up"
-        icon="i-heroicons-arrow-right-20-solid"
-        trailing
-        color="black"
-        to="/signup"
-        class="hidden lg:flex"
-      /> -->
-    </template>
-
-    <template #panel>
-      <UNavigationTree
-        :links="mapContentNavigation(navigation)"
-        default-open
-      />
+      <UForm
+        v-if="data.session"
+        :state="{ data }"
+        @submit="signOut"
+      >
+        <UButton
+          label="Sign out"
+          color="gray"
+          type="submit"
+        />
+      </UForm>
     </template>
   </UHeader>
 </template>
