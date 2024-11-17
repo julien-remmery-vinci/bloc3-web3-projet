@@ -14,18 +14,24 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase'
   ],
 
-  hooks: {
-    // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
-    'components:extend': (components) => {
-      const globals = components.filter(c => ['UButton'].includes(c.pascalName))
-
-      globals.forEach(c => c.global = true)
-    }
+  devtools: {
+    enabled: true
   },
 
   colorMode: {
     disableTransition: true
   },
+
+  routeRules: {
+    '/api/search.json': { prerender: true },
+    '/docs': { redirect: '/docs/getting-started', prerender: false }
+  },
+
+  future: {
+    compatibilityVersion: 4
+  },
+
+  compatibilityDate: '2024-07-11',
 
   nitro: {
     prerender: {
@@ -37,21 +43,17 @@ export default defineNuxtConfig({
     }
   },
 
-  routeRules: {
-    '/api/search.json': { prerender: true },
-    '/docs': { redirect: '/docs/getting-started', prerender: false }
-  },
-
-  devtools: {
-    enabled: true
-  },
-
   typescript: {
     strict: false
   },
 
-  future: {
-    compatibilityVersion: 4
+  hooks: {
+    // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
+    'components:extend': (components) => {
+      const globals = components.filter(c => ['UButton'].includes(c.pascalName))
+
+      globals.forEach(c => c.global = true)
+    }
   },
 
   eslint: {
@@ -63,8 +65,6 @@ export default defineNuxtConfig({
     }
   },
 
-  compatibilityDate: '2024-07-11',
-
   supabase: {
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY,
@@ -72,8 +72,8 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/confirm',
       include: undefined,
-      exclude: ['/register'],
-      cookieRedirect: true,
+      exclude: ['/'],
+      cookieRedirect: true
     },
     cookieOptions: {
       maxAge: 60 * 60 * 8,

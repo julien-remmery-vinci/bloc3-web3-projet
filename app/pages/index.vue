@@ -1,21 +1,29 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import 'vue-cal/dist/vuecal.css'
-import VueCal from 'vue-cal'
+<script setup>
+import { supabase } from '../utils/supabase'
 
-useSeoMeta({
-  title: 'Hello World'
+const users = ref([])
+
+async function getUsers() {
+  const { data } = await supabase.from('users').select()
+  users.value = data
+  console.log(data)
+}
+
+onMounted(() => {
+  getUsers()
 })
-
-const selectedDate = ref(new Date())
 </script>
 
 <template>
   <div>
-    <VueCal v-model="selectedDate" />
+    <h1>Home</h1>
+    <ul>
+      <li
+        v-for="user in users"
+        :key="user.id"
+      >
+        {{ user.name }}
+      </li>
+    </ul>
   </div>
 </template>
-
-<style scoped>
-/* You can remove the styles if they are not needed */
-</style>
