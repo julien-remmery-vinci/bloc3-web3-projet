@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient()
-const { data } = await supabase.auth.getSession()
+const session = useSupabaseSession()
 
 const links = [{
   label: 'Stats',
@@ -12,7 +12,6 @@ const links = [{
 
 async function signOut() {
   const { error } = await supabase.auth.signOut()
-  console.log(error)
   if (!error) {
     navigateTo('/')
   }
@@ -27,14 +26,14 @@ async function signOut() {
 
     <template #right>
       <UButton
-        v-if="!data.session"
+        v-if="!session"
         label="Sign in"
         color="gray"
         to="/login"
       />
       <UForm
-        v-if="data.session"
-        :state="{ data }"
+        v-if="session"
+        :state="{ session }"
         @submit="signOut"
       >
         <UButton

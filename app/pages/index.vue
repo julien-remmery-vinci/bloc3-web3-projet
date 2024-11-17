@@ -1,12 +1,11 @@
 <script setup>
-import { supabase } from '../utils/supabase'
+const supabase = useSupabaseClient()
 
 const users = ref([])
 
-async function getUsers() {
+const getUsers = async () => {
   const { data } = await supabase.from('users').select()
   users.value = data
-  console.log(data)
 }
 
 onMounted(() => {
