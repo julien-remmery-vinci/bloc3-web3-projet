@@ -22,10 +22,7 @@ export default defineNuxtConfig({
     disableTransition: true
   },
 
-  routeRules: {
-    '/api/search.json': { prerender: true },
-    '/docs': { redirect: '/docs/getting-started', prerender: false }
-  },
+  routeRules: {},
 
   future: {
     compatibilityVersion: 4
@@ -36,8 +33,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: [
-        '/',
-        '/docs'
+        '/'
       ],
       crawlLinks: true
     }
