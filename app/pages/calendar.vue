@@ -7,7 +7,7 @@ const user = useSupabaseUser()
 
 // Subscriptions
 const subscriptions = ref([
-  { name: '', amount: 0, debitDate: '', recurrence: '' }
+  { name: '', amount: 0, debit_date: '', recurrence: '' }
 ]) // Liste des abonnements
 
 const events = ref([])
@@ -26,8 +26,8 @@ const getSubscriptions = async () => {
   subscriptions.value = data || []
   events.value = subscriptions.value.map(sub => ({
     title: sub.name,
-    start: new Date(sub.debitDate),
-    end: new Date(sub.debitDate),
+    start: new Date(sub.debit_date),
+    end: new Date(sub.debit_date),
     content: `Amount: ${sub.amount}, Recurrence: ${sub.recurrence}`
   }))
 }
@@ -47,7 +47,7 @@ const selectedDate = ref(new Date())
   <div>
     <ul>
       <li v-for="sub in subscriptions" :key="sub.name">
-        {{ sub.name }} - {{ sub.amount }} - {{ sub.debitDate }} - {{ sub.recurrence }}
+        {{ sub.name }} - {{ sub.amount }} - {{ sub.debit_date }} - {{ sub.recurrence }}
       </li>
     </ul>
     <h1>Calendar</h1>
