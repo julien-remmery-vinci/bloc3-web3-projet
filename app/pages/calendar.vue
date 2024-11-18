@@ -28,7 +28,8 @@ const getSubscriptions = async () => {
     title: sub.name,
     start: new Date(sub.debit_date),
     end: new Date(sub.debit_date),
-    content: `Amount: ${sub.amount}, Recurrence: ${sub.recurrence}`
+    content: `Amount: ${sub.amount}$, Recurrence: ${sub.recurrence}`,
+    class: 'event-class'
   }))
 }
 
@@ -45,14 +46,8 @@ const selectedDate = ref(new Date())
 
 <template>
   <div>
-    <ul>
-      <li v-for="sub in subscriptions" :key="sub.name">
-        {{ sub.name }} - {{ sub.amount }} - {{ sub.debit_date }} - {{ sub.recurrence }}
-      </li>
-    </ul>
-    <h1>Calendar</h1>
     <VueCal active-view="month" :disable-views="['years', 'year', 'week']"
-            events-count-on-month-view style="height: 600px" events-on-day-view="short" v-model="selectedDate" :events="events" />
+            events-count-on-month-view style="height: 600px" :time="false" events-on-day-view="short" v-model="selectedDate" :events="events" />
   </div>
 </template>
 
@@ -63,4 +58,7 @@ const selectedDate = ref(new Date())
 
 }
 .vuecal__now-line {color: hotpink;}
+.vuecal__event.event-class{
+  background-color: transparent;
+  color: hotpink;}
 </style>
