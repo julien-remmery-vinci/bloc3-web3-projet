@@ -15,7 +15,6 @@ const reminders = ref([
     end: new Date()
   }
 ])
-
 </script>
 
 <template>
