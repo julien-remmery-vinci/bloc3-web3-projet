@@ -45,6 +45,11 @@ const selectedDate = ref(new Date())
 
 <template>
   <div>
+    <ul>
+      <li v-for="sub in subscriptions" :key="sub.name">
+        {{ sub.name }} - {{ sub.amount }} - {{ sub.debitDate }} - {{ sub.recurrence }}
+      </li>
+    </ul>
     <h1>Calendar</h1>
     <VueCal active-view="month" :disable-views="['years', 'year', 'week']"
             events-count-on-month-view events-on-day-view="short" v-model="selectedDate" :events="events" />
