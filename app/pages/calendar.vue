@@ -52,38 +52,10 @@ const selectedDate = ref(new Date())
     </ul>
     <h1>Calendar</h1>
     <VueCal active-view="month" :disable-views="['years', 'year', 'week']"
-            events-count-on-month-view events-on-day-view="short" v-model="selectedDate" :events="events" />
+            events-count-on-month-view style="height: 600px" events-on-day-view="short" v-model="selectedDate" :events="events" />
   </div>
 </template>
 
 <style scoped>
-form {
-  margin-bottom: 20px;
-}
 
-form div {
-  margin-bottom: 10px;
-}
-
-form label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-form input {
-  width: 20%; /* Set width to 20% */
-  box-sizing: border-box;
-}
-
-button {
-  padding: 8px 16px; /* Reduced padding for smaller button */
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
 </style>
