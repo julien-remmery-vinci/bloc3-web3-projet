@@ -10,7 +10,7 @@ const salary = ref(null)
 // Subscriptions
 const subscriptions = ref([
   { name: '', amount: 0, debitDate: '', recurrence: '' }
-])
+]) // Liste des abonnements
 
 // Success message state
 const successMessage = ref<string>('')
@@ -89,46 +89,28 @@ const saveInfos = async () => {
     }
   }
 
-  // Save subscriptions
+  // Save or update subscriptions
   for (const subscription of subscriptions.value) {
     if (!subscription.name || !subscription.amount || !subscription.debitDate || !subscription.recurrence) {
       console.error('Veuillez remplir tous les champs de l\'abonnement.')
       continue
     }
 
-    const { data: existingSubscriptions, error: fetchError } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.value.id)
-      .eq('name', subscription.name)
-      .eq('amount', subscription.amount)
-      .eq('debit_date', subscription.debitDate)
-      .eq('recurrence', subscription.recurrence)
-
-    if (fetchError) {
-      console.error('Erreur lors de la vérification de l\'abonnement :', fetchError)
-      continue
-    }
-
-    if (existingSubscriptions && existingSubscriptions.length > 0) {
-      console.log('L\'abonnement existe déjà :', subscription.name)
-      continue
-    }
-
-    const { error: insertError } = await supabase.from('subscriptions').insert({
+    // Use upsert to ensure uniqueness
+    const { error: upsertError } = await supabase.from('subscriptions').upsert({
       user_id: user.value.id,
       name: subscription.name,
       amount: subscription.amount,
       debit_date: subscription.debitDate,
       recurrence: subscription.recurrence
-    })
+    }, { onConflict: ['user_id', 'name', 'debit_date'] })
 
-    if (insertError) {
-      console.error('Erreur lors de la sauvegarde de l\'abonnement :', insertError)
+    if (upsertError) {
+      console.error('Erreur lors de la sauvegarde de l\'abonnement :', upsertError)
       continue
     }
 
-    console.log('Abonnement sauvegardé :', subscription.name)
+    console.log('Abonnement sauvegardé ou mis à jour :', subscription.name)
   }
 
   // Set success message
@@ -144,7 +126,6 @@ const saveInfos = async () => {
     <h1 class="title">
       Entrez vos informations
     </h1>
-
     <!-- Success message -->
     <div
       v-if="successMessage"
@@ -257,11 +238,15 @@ const saveInfos = async () => {
         Enregistrer
       </button>
     </form>
+
+    <!-- Success message -->
+    <div v-if="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Updated Styles */
 .infos-container {
   max-width: 800px;
   margin: auto;
@@ -272,17 +257,6 @@ const saveInfos = async () => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.success-message {
-  background-color: #4ade80;
-  color: #000;
-  text-align: center;
-  padding: 0.75rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
-}
-
 .title {
   text-align: center;
   font-size: 2rem;
@@ -290,34 +264,74 @@ const saveInfos = async () => {
   font-weight: bold;
 }
 
+/* Success message styles */
+.success-message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4ade80;
+  color: black;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  font-size: 1rem;
+  animation: fade-in-out 3s forwards;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  10%,
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
 .form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
+.form-group-inline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+}
+
 .form-group {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group-inline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.form-group label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
 }
 
 .subscription-item {
   display: flex;
-  flex-direction: column;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
+.subscription-item .form-group-inline {
+  gap: 1rem;
+}
+
 .input {
   width: 100%;
-  max-width: 300px;
   padding: 0.75rem;
   font-size: 1rem;
   border: 1px solid #3b3b3b;
@@ -328,6 +342,8 @@ const saveInfos = async () => {
 
 .input-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .currency-symbol {
@@ -355,5 +371,23 @@ const saveInfos = async () => {
 .add-btn:hover,
 .save-btn:hover {
   background-color: #22c55e;
+}
+
+.add-btn {
+  margin-top: 1rem;
+  align-self: flex-start;
+}
+
+.save-btn {
+  align-self: center;
+}
+
+/* Ajustement de la largeur et visibilité des prix */
+.subscription-item .input {
+  flex: 1;
+}
+
+.subscription-item .currency-symbol {
+  right: 20px;
 }
 </style>
