@@ -56,6 +56,11 @@ const selectedDate = ref(new Date())
   </div>
 </template>
 
-<style scoped>
+<style>
+.vuecal__cell-events-count {
+  color: white;
+  background-color: hotpink;
 
+}
+.vuecal__now-line {color: hotpink;}
 </style>
