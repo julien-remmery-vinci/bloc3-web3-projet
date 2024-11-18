@@ -97,20 +97,18 @@ const saveInfos = async () => {
     }
 
     // Use upsert to ensure uniqueness
-    const { error: upsertError } = await supabase.from('subscriptions').upsert({
+    const { error } = await supabase.from('subscriptions').insert({
       user_id: user.value.id,
       name: subscription.name,
       amount: subscription.amount,
       debit_date: subscription.debitDate,
       recurrence: subscription.recurrence
-    }, { onConflict: ['user_id', 'name', 'debit_date'] })
+    })
 
-    if (upsertError) {
-      console.error('Erreur lors de la sauvegarde de l\'abonnement :', upsertError)
+    if (error) {
+      console.error('Erreur lors de la sauvegarde de l\'abonnement :', error)
       continue
     }
-
-    console.log('Abonnement sauvegardé ou mis à jour :', subscription.name)
   }
 
   // Set success message
