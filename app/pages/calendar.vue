@@ -8,39 +8,19 @@ useSeoMeta({
 })
 
 const selectedDate = ref(new Date())
-const reminders = ref([])
-
-const newReminder = ref({
-  title: '',
-  start: ''
-})
-
-const addReminder = () => {
-  if (newReminder.value.title && newReminder.value.start) {
-    reminders.value.push({
-      title: newReminder.value.title,
-      start: new Date(newReminder.value.start),
-      end: new Date(newReminder.value.start) // End date is the same as start date for simplicity
-    })
-    newReminder.value = { title: '', start: '' }
+const reminders = ref([
+  {
+    title: 'Sample Reminder',
+    start: new Date(),
+    end: new Date()
   }
-}
+])
+
 </script>
 
 <template>
   <div>
     <h1>Calendar</h1>
-    <form @submit.prevent="addReminder">
-      <div>
-        <label for="title">Reminder Title:</label>
-        <input id="title" v-model="newReminder.title" type="text" required />
-      </div>
-      <div>
-        <label for="start">Date and Time:</label>
-        <input id="start" v-model="newReminder.start" type="datetime-local" required />
-      </div>
-      <button type="submit">Add Reminder</button>
-    </form>
     <VueCal v-model="selectedDate" :events="reminders" />
   </div>
 </template>
@@ -60,7 +40,7 @@ form label {
 }
 
 form input {
-  width: 20%;
+  width: 20%; /* Set width to 20% */
   box-sizing: border-box;
 }
 
