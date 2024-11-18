@@ -3,8 +3,8 @@ const supabase = useSupabaseClient()
 const session = useSupabaseSession()
 
 const links = [{
-  label: 'Stats',
-  to: '/stats'
+  label: 'Infos',
+  to: '/infos'
 }, {
   label: 'Calendar',
   to: '/calendar'
@@ -29,7 +29,7 @@ async function signOut() {
         v-if="!session"
         label="Sign in"
         color="gray"
-        to="/login"
+        to="/signin"
       />
       <UForm
         v-if="session"

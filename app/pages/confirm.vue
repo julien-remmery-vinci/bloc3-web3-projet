@@ -5,8 +5,11 @@ const user = useSupabaseUser()
 const cookieName = useRuntimeConfig().public.supabase.cookieName
 const redirectPath = useCookie(`${cookieName}-redirect-path`).value
 
-watch(user, () => {
+watch(user, async () => {
   if (user.value) {
+    if (new Date(user.value.last_sign_in_at).getTime() - new Date(user.value.created_at).getTime() < 1000 * 60 * 5) {
+      return navigateTo('/infos')
+    }
     // Clear cookie
     useCookie(`${cookieName}-redirect-path`).value = null
     // Redirect to path

@@ -4,7 +4,7 @@ import 'vue-cal/dist/vuecal.css'
 import VueCal from 'vue-cal'
 
 useSeoMeta({
-  title: 'Home page'
+  title: 'Calendar'
 })
 
 const selectedDate = ref(new Date())

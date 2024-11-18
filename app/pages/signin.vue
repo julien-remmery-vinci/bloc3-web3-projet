@@ -4,7 +4,7 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Login'
+  title: 'Sign in'
 })
 
 const supabase = useSupabaseClient()
