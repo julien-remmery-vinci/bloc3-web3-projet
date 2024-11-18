@@ -3,9 +3,9 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
 // User Info Fields
-const nom = ref<string>('')
-const prenom = ref<string>('')
-const salary = ref<number | null>(null)
+const nom = ref('')
+const prenom = ref('')
+const salary = ref(null)
 
 // Subscriptions
 const subscriptions = ref([
@@ -15,35 +15,42 @@ const subscriptions = ref([
 // Success message state
 const successMessage = ref<string>('')
 
-// Fetch user info and subscriptions when the component is mounted
-onMounted(async () => {
-  // Fetch user info
-  const { data: userInfo, error: userError } = await supabase
+const getUserInfos = async () => {
+  const { data, error } = await supabase
     .from('infos')
     .select('nom, prenom, salaire')
     .eq('user_id', user.value.id)
-    .single()
 
-  if (userError) {
-    console.error('Erreur lors de la récupération des informations utilisateur :', userError)
-  } else if (userInfo) {
-    nom.value = userInfo.nom
-    prenom.value = userInfo.prenom
-    salary.value = userInfo.salaire
+  if (error) {
+    console.error('Erreur lors de la récupération des informations utilisateur :', error)
+    return
   }
 
-  // Fetch subscriptions
-  const { data: subscriptionData, error: subscriptionError } = await supabase
+  if (data && data.length > 0) {
+    nom.value = data[0].nom
+    prenom.value = data[0].prenom
+    salary.value = data[0].salaire
+  }
+}
+
+const getSubscriptions = async () => {
+  const { data, error } = await supabase
     .from('subscriptions')
     .select('*')
     .eq('user_id', user.value.id)
 
-  if (subscriptionError) {
-    console.error('Erreur lors de la récupération des abonnements :', subscriptionError)
+  if (error) {
+    console.error('Erreur lors de la récupération des abonnements :', error)
     return
   }
 
-  subscriptions.value = subscriptionData || []
+  subscriptions.value = data || []
+}
+
+// Fetch user info and subscriptions when the component is mounted
+onMounted(() => {
+  getUserInfos()
+  getSubscriptions()
 })
 
 // Add a new empty subscription input field
@@ -53,23 +60,33 @@ const addSubscription = () => {
 
 // Save user info and subscriptions
 const saveInfos = async () => {
-  if (!user.value) {
-    console.error('Utilisateur non connecté.')
-    return
-  }
+  const { data } = await supabase.from('infos').select().eq('user_id', user.value.id)
 
-  // Save user info
-  const { error: userInfoError } = await supabase.from('infos').upsert({
-    user_id: user.value.id,
-    nom: nom.value,
-    prenom: prenom.value,
-    salaire: salary.value
-  })
+  if (!data || data.length === 0) {
+    const { error } = await supabase.from('infos')
+      .insert({
+        user_id: user.value.id,
+        nom: nom.value,
+        prenom: prenom.value,
+        salaire: salary.value
+      })
 
-  if (userInfoError) {
-    console.error('Erreur lors de la sauvegarde des informations utilisateur :', userInfoError)
+    if (error) {
+      console.error('Erreur lors de la sauvegarde des informations utilisateur :', error)
+    }
   } else {
-    console.log('Informations utilisateur sauvegardées.')
+    // Update user info
+    const { error } = await supabase.from('infos')
+      .update({
+        nom: nom.value,
+        prenom: prenom.value,
+        salaire: salary.value
+      })
+      .eq('user_id', user.value.id)
+
+    if (error) {
+      console.error('Erreur lors de la mise à jour des informations utilisateur :', error)
+    }
   }
 
   // Save subscriptions
@@ -119,42 +136,48 @@ const saveInfos = async () => {
   setTimeout(() => {
     successMessage.value = ''
   }, 3000) // Effacer après 3 secondes
-
-  console.log('Toutes les informations ont été sauvegardées avec succès.')
 }
 </script>
 
 <template>
   <div class="infos-container">
-    <h1 class="title">Entrez vos informations</h1>
+    <h1 class="title">
+      Entrez vos informations
+    </h1>
 
     <!-- Success message -->
-    <div v-if="successMessage" class="success-message">
+    <div
+      v-if="successMessage"
+      class="success-message"
+    >
       {{ successMessage }}
     </div>
 
-    <form @submit.prevent="saveInfos" class="form">
+    <form
+      class="form"
+      @submit.prevent="saveInfos"
+    >
       <!-- Nom et Prénom -->
       <div class="form-group-inline">
         <div class="form-group">
           <label for="nom">Nom</label>
           <input
             id="nom"
-            type="text"
             v-model="nom"
+            type="text"
             placeholder="Entrez votre nom"
             class="input"
-          />
+          >
         </div>
         <div class="form-group">
           <label for="prenom">Prénom</label>
           <input
             id="prenom"
-            type="text"
             v-model="prenom"
+            type="text"
             placeholder="Entrez votre prénom"
             class="input"
-          />
+          >
         </div>
       </div>
 
@@ -163,11 +186,11 @@ const saveInfos = async () => {
         <label for="salary">Salaire (€)</label>
         <input
           id="salary"
-          type="number"
           v-model="salary"
+          type="number"
           placeholder="Entrez votre salaire"
           class="input"
-        />
+        >
       </div>
 
       <!-- Abonnements -->
@@ -180,38 +203,59 @@ const saveInfos = async () => {
         >
           <div class="form-group-inline">
             <input
-              type="text"
               v-model="sub.name"
+              type="text"
               placeholder="Nom de l'abonnement"
               class="input"
-            />
+            >
             <div class="input-wrapper">
               <input
-                type="number"
                 v-model="sub.amount"
+                type="number"
                 placeholder="Montant"
                 class="input"
-              />
+              >
               <span class="currency-symbol">€</span>
             </div>
             <input
-              type="date"
               v-model="sub.debitDate"
+              type="date"
               class="input"
-            />
-            <select v-model="sub.recurrence" class="input">
-              <option value="" disabled>Récurrence</option>
-              <option value="monthly">Mensuel</option>
-              <option value="yearly">Annuel</option>
+            >
+            <select
+              v-model="sub.recurrence"
+              class="input"
+            >
+              <option
+                value=""
+                disabled
+              >
+                Récurrence
+              </option>
+              <option value="monthly">
+                Mensuel
+              </option>
+              <option value="yearly">
+                Annuel
+              </option>
             </select>
           </div>
         </div>
-        <button type="button" @click="addSubscription" class="add-btn">
+        <button
+          type="button"
+          class="add-btn"
+          @click="addSubscription"
+        >
           Ajouter un abonnement
         </button>
       </div>
 
-      <button type="submit" class="save-btn">Enregistrer</button>
+      <button
+        type="submit"
+        class="save-btn"
+      >
+        Enregistrer
+      </button>
     </form>
   </div>
 </template>
