@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useSeoMeta({
+  title: 'Infos'
+})
+
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
@@ -9,7 +13,7 @@ const salary = ref(null)
 
 // Subscriptions
 const subscriptions = ref([
-  { name: '', amount: 0, debitDate: '', recurrence: '' }
+  { name: '', amount: 0, debit_ate: '', recurrence: '' }
 ]) // Liste des abonnements
 
 // Success message state
@@ -55,7 +59,7 @@ onMounted(() => {
 
 // Add a new empty subscription input field
 const addSubscription = () => {
-  subscriptions.value.push({ name: '', amount: 0, debitDate: '', recurrence: '' })
+  subscriptions.value.push({ name: '', amount: 0, debit_date: '', recurrence: '' })
 }
 
 // Save user info and subscriptions
@@ -91,7 +95,7 @@ const saveInfos = async () => {
 
   // Save or update subscriptions
   for (const subscription of subscriptions.value) {
-    if (!subscription.name || !subscription.amount || !subscription.debitDate || !subscription.recurrence) {
+    if (!subscription.name || !subscription.amount || !subscription.debit_date || !subscription.recurrence) {
       console.error('Veuillez remplir tous les champs de l\'abonnement.')
       continue
     }
@@ -101,7 +105,7 @@ const saveInfos = async () => {
       user_id: user.value.id,
       name: subscription.name,
       amount: subscription.amount,
-      debit_date: subscription.debitDate,
+      debit_date: subscription.debit_date,
       recurrence: subscription.recurrence
     })
 
@@ -197,7 +201,7 @@ const saveInfos = async () => {
               <span class="currency-symbol">€</span>
             </div>
             <input
-              v-model="sub.debitDate"
+              v-model="sub.debit_date"
               type="date"
               class="input"
             >

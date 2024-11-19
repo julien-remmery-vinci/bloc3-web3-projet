@@ -42,12 +42,25 @@ useSeoMeta({
 })
 
 const selectedDate = ref(new Date())
+const activeView = ref('month')
+const onCellClick = () => {
+  activeView.value = 'day'
+}
 </script>
 
 <template>
   <div>
-    <VueCal active-view="month" :disable-views="['years', 'year', 'week']"
-            events-count-on-month-view style="height: 600px" :time="false" events-on-day-view="short" v-model="selectedDate" :events="events" />
+    <VueCal
+      v-model:active-view="activeView"
+      v-model:selected-date="selectedDate"
+      :disable-views="['years', 'year', 'week']"
+      events-count-on-month-view
+      style="height: 600px"
+      :time="false"
+      events-on-day-view="short"
+      :events="events"
+      @cell-click="onCellClick"
+    />
   </div>
 </template>
 

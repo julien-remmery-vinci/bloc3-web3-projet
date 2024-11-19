@@ -13,7 +13,7 @@ watch(user, async () => {
     // Clear cookie
     useCookie(`${cookieName}-redirect-path`).value = null
     // Redirect to path
-    return navigateTo(redirectPath || '/')
+    return navigateTo(redirectPath || '/calendar')
   }
 }, { immediate: true })
 </script>
