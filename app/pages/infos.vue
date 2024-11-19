@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useSeoMeta({
+  title: 'Infos'
+})
+
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
