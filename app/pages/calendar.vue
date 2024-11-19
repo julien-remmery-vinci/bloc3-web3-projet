@@ -46,8 +46,16 @@ const selectedDate = ref(new Date())
 
 <template>
   <div>
-    <VueCal active-view="month" :disable-views="['years', 'year', 'week']"
-            events-count-on-month-view style="height: 600px" :time="false" events-on-day-view="short" v-model="selectedDate" :events="events" />
+    <VueCal
+      v-model="selectedDate"
+      active-view="month"
+      :disable-views="['years', 'year', 'week']"
+      events-count-on-month-view
+      style="height: 600px"
+      :time="false"
+      events-on-day-view="short"
+      :events="events"
+    />
   </div>
 </template>
 
