@@ -1,9 +1,3 @@
-## Quick Start
-
-```bash [Terminal]
-npx nuxi init -t github:nuxt-ui-pro/saas
-```
-
 ## Setup
 
 Make sure to install the dependencies:
