@@ -13,7 +13,7 @@ const salary = ref(null)
 
 // Subscriptions
 const subscriptions = ref([
-  { name: '', amount: 0, debit_ate: '', recurrence: '' }
+  { name: '', amount: 0, debit_date: '', recurrence: '' }
 ]) // Liste des abonnements
 
 // Success message state
